@@ -1,0 +1,37 @@
+[package]
+name = "palace-tui"
+version = "0.1.0-alpha"
+edition = "2021"
+authors = ["Your Name <your.email@example.com>"]
+license = "MIT"
+description = "A terminal-based personal knowledge graph builder"
+repository = "https://github.com/yourusername/palace-tui"
+keywords = ["tui", "knowledge-graph", "notes", "pkm"]
+categories = ["command-line-utilities"]
+
+[dependencies]
+# TUI Framework
+ratatui = "0.28"
+crossterm = "0.28"
+
+# Storage & Database
+rusqlite = { version = "0.32", features = ["bundled"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+
+# Markdown Parsing
+pulldown-cmark = "0.12"
+serde_yaml = "0.9"
+
+# File System
+notify = "6.1"
+walkdir = "2.5"
+ignore = "0.4"
+
+# Utilities
+anyhow = "1.0"
+thiserror = "1.0"
+chrono = { version = "0.4", features = ["serde"] }
+
+[dev-dependencies]
+tempfile = "3.13"

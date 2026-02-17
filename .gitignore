@@ -1,0 +1,16 @@
+/target
+Cargo.lock
+
+# Palace TUI data directory
+.palace-tui/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
