@@ -33,10 +33,10 @@ impl NoteScanner {
     /// Scan the configured directory and return all markdown file paths
     pub fn scan(&self) -> Result<Vec<PathBuf>> {
         let mut paths = Vec::new();
-        
+
         let mut builder = WalkBuilder::new(&self.config.root_path);
         builder.git_ignore(self.config.respect_gitignore);
-        
+
         if let Some(depth) = self.config.max_depth {
             builder.max_depth(Some(depth));
         }
@@ -44,7 +44,7 @@ impl NoteScanner {
         for result in builder.build() {
             let entry = result.context("Failed to read directory entry")?;
             let path = entry.path();
-            
+
             // Only include .md and .markdown files
             if path.is_file() {
                 if let Some(ext) = path.extension() {
@@ -83,14 +83,16 @@ mod tests {
         fs::write(root.join("test1.md"), "# Test 1")?;
         fs::write(root.join("test2.markdown"), "# Test 2")?;
         fs::write(root.join("test3.txt"), "Not markdown")?;
-        
+
         let config = ScanConfig::new(root);
         let scanner = NoteScanner::new(config);
         let paths = scanner.scan()?;
 
         assert_eq!(paths.len(), 2);
         assert!(paths.iter().any(|p| p.file_name().unwrap() == "test1.md"));
-        assert!(paths.iter().any(|p| p.file_name().unwrap() == "test2.markdown"));
+        assert!(paths
+            .iter()
+            .any(|p| p.file_name().unwrap() == "test2.markdown"));
 
         Ok(())
     }

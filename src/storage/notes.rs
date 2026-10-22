@@ -1,7 +1,7 @@
-use std::path::PathBuf;
+use anyhow::{Context, Result};
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
-use anyhow::{Context, Result};
+use std::path::PathBuf;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Note {
@@ -36,10 +36,10 @@ impl Note {
     pub fn from_file(path: PathBuf) -> Result<Self> {
         let content = std::fs::read_to_string(&path)
             .with_context(|| format!("Failed to read file: {}", path.display()))?;
-        
+
         let (frontmatter, body) = Self::parse_frontmatter(&content);
         let metadata = Self::extract_metadata(frontmatter, &path)?;
-        
+
         Ok(Self {
             path,
             content: body,
@@ -51,7 +51,7 @@ impl Note {
     /// Returns (frontmatter, body) tuple
     fn parse_frontmatter(content: &str) -> (Option<&str>, String) {
         let trimmed = content.trim_start();
-        
+
         if !trimmed.starts_with("---") {
             return (None, content.to_string());
         }
@@ -110,10 +110,7 @@ impl Note {
 
         // If no title in frontmatter, use filename
         if metadata.title.is_none() {
-            metadata.title = path
-                .file_stem()
-                .and_then(|s| s.to_str())
-                .map(String::from);
+            metadata.title = path.file_stem().and_then(|s| s.to_str()).map(String::from);
         }
 
         Ok(metadata)
